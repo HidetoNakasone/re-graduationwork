@@ -1,0 +1,8 @@
+<%= @flask %>
+<h1>ログイン</h1>
+<form action="/login" method="post">
+  ログイン名： <input type="text" name="name" required>
+  パスワード： <input type="text" name="pass" required>
+  <input type="submit" value="送信">
+</form>
+<p><a href="/signup">新規登録</a></p>

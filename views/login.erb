@@ -1,8 +1,47 @@
-<%= @flask %>
-<h1>ログイン</h1>
-<form action="/login" method="post">
-  ログイン名： <input type="text" name="name" required>
-  パスワード： <input type="text" name="pass" required>
-  <input type="submit" value="送信">
-</form>
-<p><a href="/signup">新規登録</a></p>
+<main>
+
+  <div id = "content_left">
+    <img src="/imgs/re_pakuri.png">
+  </div>
+
+  <div id = "content_right">
+
+    <div id = "form_waku" class="animated fadeInUp">
+
+      <form action="/login" method="post">
+
+        アカウント： <input type="text" name="name" required><br>
+        パスワード： <input type="password" name="pass" required>
+
+        <input type="submit" value="ログイン">
+      </form>
+
+    </div>
+
+    <div id = "link_signup" class="animated fadeInDown">
+      <a href="/signup">>&nbsp;アカウント作成</a>
+    </div>
+
+    <br>
+    <br>
+    <%= @flash %>
+
+  </div>
+
+</main>
+
+<footer>
+
+  <ul>
+    <li>このサービスについて</li>
+    <li>ヘルプセンター</li>
+    <li>ブログ</li>
+    <li>ステータス</li>
+    <li>規約</li>
+    <li>プライバシーポリシー</li>
+    <li>クッキー</li>
+    <li>マーケティング</li>
+    <li>プロフィール</li>
+  </ul>
+
+</footer>

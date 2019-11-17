@@ -1,0 +1,942 @@
+::-webkit-input-placeholder {
+  font-size: 1.2em;
+  color: rgb(37, 165, 221);
+}
+
+a:link, a:visited {
+  text-decoration: none;
+  color: rgb(130, 129, 129);
+}
+
+a:hover {
+  font-weight: 600;
+  color: rgb(37, 165, 221);
+}
+
+.waku a:hover {
+  font-weight: 400;
+  color: rgb(37, 165, 221);
+  text-decoration: underline;
+}
+
+body {
+  background-color: rgb(231, 236, 240);
+  width: 100%;
+  margin: 0;
+  margin-top: 0px;
+}
+
+
+
+/* ここからは、ログイン・アカウント作成画面の css */
+
+
+
+#content_left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50vw;
+  overflow: hidden;
+  background-color: rgb(71, 159, 235);
+}
+
+#content_left img {
+  /* width: 720px; */
+  /* margin: 15% 0; */
+  width: 100%;
+}
+
+#content_right {
+  /* float: right; */
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50vw;
+  height: 100%;
+  background-color: white;
+}
+
+#form_waku {
+  background-color: rgb(237, 235, 235);
+  /* width: 64%; */
+  width: 60%;
+  margin: auto;
+  border-radius: 30px;
+}
+
+#content_right form {
+
+  padding: 66px;
+  width: 80%;
+  margin-top: 30vh;
+  /* margin-left: 20%; */
+
+  color: gray;
+}
+
+#content_right form input[type="text"] {
+  /* フォーカス時の外枠を消している */
+  outline: none;
+  width: 200px;
+}
+
+#content_right form input[type="password"] {
+  /* フォーカス時の外枠を消している */
+  outline: none;
+  width: 200px;
+}
+
+#content_right form input[type="submit"] {
+
+  height: 32px;
+  width: 300px;
+
+  font-size: 1.2em;
+
+  border-radius: 30px;
+  border: 1px solid rgb(37, 165, 221);
+
+  margin: auto;
+  margin-top: 30px;
+  /* margin-left: 20px; */
+}
+
+#content_right form input[type="submit"]:hover {
+  background-color: rgb(27, 175, 238);
+  color: white;
+}
+
+#link_signup {
+  text-align: center;
+  height: 32px;
+  width: 300px;
+
+  font-size: .96em;
+
+  border-radius: 30px;
+  background-color: rgb(27, 175, 238);
+  /* border: 1px solid rgb(193, 193, 193); */
+  margin: auto;
+  margin-top: 30px;
+  /* margin-left: 196px; */
+}
+
+#link_signup:hover {
+  background-color: rgb(27, 138, 228);
+}
+
+#link_signup a {
+  color: white;
+  font-size: 1.3em;
+}
+
+#link_signup a:hover {
+  font-weight: normal;
+}
+
+footer {
+  /* margin-top: -10px; */
+  /* float: left; */
+  width: 100vw;
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  overflow: hidden;
+}
+
+footer ul {
+  margin-top: 0;
+  background-color: white;
+
+  border-top: 1px solid rgb(217, 217, 217);
+
+  width: 100%;
+  height: 46px;
+  margin-bottom: 0;
+
+  padding-left: 174px;
+  padding-top: 16px;
+}
+
+footer ul li {
+  margin-right: 20px;
+  margin-left: 20px;
+  float: left;
+  font-weight: 400;
+  font-size: .80em;
+  color: rgb(194, 194, 194);
+  list-style: none;
+}
+
+
+
+/* ここまで。 ログイン・アカウント作成画面の css */
+
+
+
+
+#header_div {
+  z-index: 0;
+
+  background-color: white;
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.25);
+  height: 60px;
+  margin-top: -30px;
+  color: rgb(110, 109, 109);
+}
+
+#header_div ul {
+  margin-left: 6%;
+}
+
+#header_div ul li {
+  margin-top: 25px;
+  list-style: none;
+  float: left;
+  padding: 0 20px;
+}
+
+#header_div form {
+  float: right;
+  width: 30%;
+  margin-top: 22px;
+  /* margin-right: -2%; */
+}
+
+#header_div form input[type="text"] {
+
+  /* フォーカス時の外枠を消している */
+  outline: none;
+
+  padding-left: 12px;
+}
+
+#serch_sub {
+  height: 30px;
+  width: 14%;
+  border: 1px solid rgb(37, 165, 221);
+  color: rgb(37, 165, 221);
+  font-size: .8em;
+  padding: 5px 0;
+  border-radius: 25px;
+  /* margin-right: 6%; */
+}
+
+#serch_text {
+  height: 25px;
+  width: 46%;
+  border-radius: 20px;
+  border: 1px solid rgb(217, 216, 216);
+  background-color: rgb(247, 248, 249);
+  margin-right: 2%;
+}
+
+#logo_img {
+
+  object-fit: cover;
+
+  float: left;
+  height: 45px;
+  width: 45px;
+  margin-top: 15px;
+  /* margin-left: 264px; */
+  margin-left: 16%;
+}
+
+main {
+  /* height: 1000px; */
+  width: 100%;
+  /* background-color: rgb(231, 236, 240); */
+}
+
+#about_me {
+  height: 220px;
+  width: 20%;
+  margin-top: 10px;
+  margin-left: 8.6%;
+  margin-right: 1%;
+  background-color: white;
+  float: left;
+}
+
+#view_follow {
+  height: 466px;
+  width: 20%;
+  margin-top: 15px;
+  margin-left: 8.6%;
+  margin-right: 1%;
+  background-color: white;
+  float: left;
+}
+
+#view_res {
+  width: 40.8%;
+  margin-top: 10px;
+
+  background-color: white;
+  float: right;
+}
+
+#view_followers {
+  /* height: 390px; */
+  height: 466px;
+  width: 20%;
+  margin-top: 10px;
+  margin-left: 1%;
+  margin-right: 8.6%;
+  background-color: white;
+  float: right;
+}
+
+.waku {
+  margin-top: -3px;
+  padding: 0 15px;
+}
+
+#view_follow .waku h1, #view_followers .waku h1 {
+  font-size: 1.3em;
+}
+
+#more {
+  margin-top: 7px;
+  font-size: 1em;
+  color: rgb(37, 165, 221);
+}
+
+.hito {
+  /* margin-top: -3px; */
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgb(232, 229, 229);
+}
+
+.hito img {
+
+  object-fit: cover;
+
+  margin-top: 1px;
+  margin-right: 10px;
+  margin-left: 3px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  float: left;
+}
+
+.hito .name {
+  font-size: .80em;
+  font-weight: bold;
+}
+
+.hito form {
+  margin-top: -10px;
+}
+
+.hito > a:link {
+  text-decoration: none;
+}
+
+.hito > a {
+  color: black;
+}
+
+
+.follow_off {
+  height: 25px;
+  width: 92px;
+  border: 1px solid rgb(37, 165, 221);
+  border-radius: 13px;
+
+  font-size: .75em;
+  font-weight: bold;
+  color: rgb(37, 165, 221);
+  transition: .2s;
+}
+
+.follow_off:hover {
+  background-color: rgb(37, 165, 221);
+  color: white;
+  transition: .2s;
+  cursor: pointer;
+}
+
+.follow_on {
+  height: 25px;
+  width: 92px;
+  border: 1px solid rgb(37, 165, 221);
+  border-radius: 13px;
+
+  font-size: .75em;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(37, 165, 221);
+  transition: .2s;
+}
+
+.follow_on:hover {
+  background-color: white;
+  color: rgb(37, 165, 221);
+  transition: .2s;
+  cursor: pointer;
+}
+
+#about_me_back {
+  overflow: hidden;
+  width: 100%;
+  height: 94px;
+}
+
+#about_me_back img {
+
+  object-fit: cover;
+
+  margin-top: -26px;
+  width: 100%;
+}
+
+#about_me_icon {
+
+  object-fit: cover;
+
+  margin-top: -26px;
+  width: 70px;
+  height: 70px;
+  border: 3px solid white;
+  border-radius: 50%;
+  /* float: left; */
+  background-color: white;
+}
+
+#about_me .waku > h1 {
+  font-size: 1.04em;
+  margin-top: -41px;
+  margin-left: 79px;
+}
+
+#about_me .waku > p {
+  font-size: .8em;
+  color: rgb(112, 112, 112);
+  margin-top: -13px;
+  margin-left: 79px;
+}
+
+.about_me_status {
+  font-size: .9em;
+  width: 32%;
+  margin: -5px 0 0 1%;
+  float: left;
+}
+
+.about_me_status h1 {
+  font-size: .9em;
+  font-weight: lighter;
+  color: rgb(97, 97, 97);
+}
+
+.about_me_status p {
+  margin-top: -10px;
+  font-size: 1.2em;
+  color: rgb(37, 165, 221);
+  font-weight: bold;
+}
+
+#what_now {
+  height: 60px;
+  background-color: rgb(232, 244, 251);
+}
+
+#kakunin {
+  width: 200px;
+  border-radius: 10px;
+  margin: 10px 0 10px 12px;
+}
+
+#form_my_icon {
+
+  object-fit: cover;
+
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  margin-top: 11px;
+  margin-left: 20px;
+  float: left;
+}
+
+#now_form {
+  border-bottom: 1px solid rgb(244, 244, 244);
+}
+
+#now_form textarea {
+
+  /* フォーカス時の外枠を消している */
+  outline: none;
+
+  height: 34px;
+  /* width: 400px; */
+  width: 66%;
+
+  margin-top: 6px;
+  padding-top: 8px;
+
+  margin-left: 20px;
+  padding-left: 10px;
+  border-radius: 10px;
+  border: 1px solid rgb(215, 227, 232);
+  color: rgb(37, 165, 221);
+
+  resize: none;
+
+  float: left;
+}
+
+
+#now_form label {
+  margin-left: 6px;
+  padding: 0 5px;
+  color: rgb(37, 165, 221);
+}
+
+#now_form label:hover {
+  cursor : pointer;
+}
+
+.res {
+  border-bottom: 1px solid rgb(215, 227, 232);
+}
+
+.res .icon_img {
+
+  object-fit: cover;
+
+  margin-top: 1px;
+  margin-right: 10px;
+  margin-left: 8px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  float: left;
+}
+
+.res .name {
+  margin-top: 2px;
+  font-size: .8em;
+  font-weight: bold;
+  float: left;
+  padding-right: 10px;
+  height: 10px;
+  color: black;
+}
+
+.res .name:hover {
+  color: rgb(37, 165, 221);
+}
+
+.res .time {
+  padding-top: 2px;
+  font-size: .8em;
+  color: rgb(142, 142, 142);
+}
+
+.res_main {
+
+  /* 文字がはみ出ないように */
+  word-wrap:break-word;
+
+  margin-top: -10px;
+  margin-left: 58px;
+}
+
+.res_main p {
+  font-size: .9em;
+  color: rgb(64, 64, 64);
+  font-weight: 400;
+}
+
+.res .up_img {
+
+  object-fit: cover;
+
+  width: 98%;
+  border: 1px solid rgb(221, 230, 235);
+  border-radius: 5px;
+  margin: 4px 10px -6px 0px;
+}
+
+.res_info {
+  margin-top: -2px;
+  padding-left: 8px;
+  margin-bottom: -2px;
+  color :gray;
+}
+
+.res_info > form, .retw_on {
+  /* リツイートがonの時、formではなく、labelで表示させている。ので .retw_on を追加。 */
+  float: left;
+}
+
+
+
+/* いいね の状態で、色を変えている。 */
+.res_info .iine_on {
+
+  color: rgb(224, 36, 94);
+  cursor: pointer;
+}
+
+.res_info .iine_off {
+  cursor: pointer;
+}
+
+.res_info .iine_off:hover {
+  color: rgb(224, 36, 94);
+}
+
+/* リツイートの場合 */
+
+.res_info .retw_on {
+
+  color: rgb(31, 201, 130);
+  cursor: default;
+}
+
+.retw_on, .retw_off {
+
+  margin-top: 1px;
+  /* リツイートの場合、onでは form ではないので、少しスタイルをいじる。 */
+  padding-right: 5px;
+
+}
+
+.res_info .retw_off {
+  color: gray;
+  cursor: pointer;
+}
+
+.res_info .retw_off:hover {
+  color: rgb(31, 201, 130);
+}
+
+.res_info .icon_retw {
+  color: gray;
+}
+
+.res_info .icon_iine {
+
+  margin-left: 48px;
+  margin-top: -35px;
+
+  padding-left: 26px;
+  color: gray;
+}
+
+
+
+
+.retw_top {
+
+  height: 30px;
+  margin-bottom: -10px;
+
+}
+
+.retw_icon_img {
+
+  object-fit: cover;
+
+  margin-top: 1px;
+  margin-right: 10px;
+  margin-left: 8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  float: left;
+}
+
+.retw_name {
+  margin-top: 2px;
+  font-size: .7em;
+  font-weight: bold;
+  float: left;
+  padding-right: 10px;
+  height: 10px;
+  color: gray;
+}
+
+.retw_name:hover {
+  color: rgb(37, 165, 221);
+}
+
+.retw_time {
+  padding-top: 2px;
+  font-size: .7em;
+  color: rgb(142, 142, 142);
+}
+
+
+
+
+/* ↓ about_me ページが主に続く */
+
+
+#mypage_top {
+
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.25);
+  margin-top: -1px;
+  height: 360px;
+  width:100%;
+  /* background-color: white; */
+
+  border-top: 1px solid rgba(0,0,0,0.25);
+  overflow: hidden;
+}
+
+#mypage_back_img {
+
+  object-fit: cover;
+
+  margin-top: -190px;
+  width: 100%;
+}
+
+#mypage_top_status {
+  z-index: 1;
+  width: 100%;
+  height: 60px;
+  background-color: white;
+
+  box-shadow: 0 1px 3px 0 rgba(0,0,0,0.25);
+}
+
+#mypage_top_status > div {
+  padding-left: 29.5%;
+}
+
+.status_con {
+  /* background-color: rgb(213, 202, 236); */
+  float: left;
+  padding: 10px 16px;
+  text-align: center;
+  margin-bottom: -1px;
+}
+
+.status_con h1 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font-size: .75em;
+  color: rgb(110, 113, 115);
+}
+
+.status_con p {
+  font-size: .9em;
+  font-weight: bold;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  color: rgb(110, 113, 115);
+}
+
+
+
+
+
+
+#mypage_follow_status .follow_off {
+  border: 1px solid rgb(37, 165, 221);
+
+  font-weight: bold;
+  color: rgb(37, 165, 221);
+  transition: .2s;
+
+  height: 35px;
+  width: 110px;
+  font-size: .9em;
+  border-radius: 20px;
+  margin-top: 12px;
+  margin-left: 42%;
+  padding-top: 2px;
+}
+
+#mypage_follow_status .follow_off:hover {
+  background-color: rgb(37, 165, 221);
+  color: white;
+  transition: .2s;
+  cursor: pointer;
+}
+
+#mypage_follow_status .follow_on {
+  border: 1px solid rgb(37, 165, 221);
+
+  font-weight: bold;
+  color: white;
+  background-color: rgb(37, 165, 221);
+  transition: .2s;
+
+  height: 35px;
+  width: 110px;
+  font-size: .9em;
+  border-radius: 20px;
+  margin-top: 12px;
+  margin-left: 42%;
+  padding-top: 2px;
+}
+
+#mypage_follow_status .follow_on:hover {
+  background-color: white;
+  color: rgb(37, 165, 221);
+  transition: .2s;
+  cursor: pointer;
+}
+
+
+
+#my_icon {
+
+  object-fit: cover;
+
+  height: 125px;
+  z-index: 2;
+  margin-top: -125px;
+  /* margin-left: 140px; */
+  margin-left: 9.4%;
+}
+
+#my_icon div img {
+
+  object-fit: cover;
+
+  height: 200px;
+  width: 200px;
+
+  background-color: white;
+  border-radius: 50%;
+  border: 5px solid white;
+  /* margin-left: -63px; */
+  /* width: 100%; */
+}
+
+#my_info {
+  /* height: 200px; */
+  /* height: 400px; */
+  width: 20%;
+  margin-top: 10px;
+  margin-left: 8.6%;
+  margin-right: 1%;
+  float: left;
+
+  padding-top: 14px;
+}
+
+#my_info h1 {
+  font-size: 1.2em;
+}
+
+#my_info p {
+  font-size: .9em;
+  margin-top: -13px;
+  color: rgb(110, 113, 115);
+}
+
+#my_info #account_comment {
+  font-size: .85em;
+  color: rgb(80, 80, 80);
+  margin-top: 0px;
+}
+
+#go_comment {
+  /* フォーカス時の外枠を消している */
+  outline: none;
+}
+
+#my_view_res .res_top {
+  border-bottom: 1px solid rgb(199, 210, 217);
+  padding-left: 20px;
+}
+
+#my_view_res .res_top h1 {
+  font-size: 1.1em;
+  font-weight: 450;
+}
+
+#my_follow {
+  /* height: 466px; */
+  width: 20%;
+  margin-top: 15px;
+  margin-left: 8.6%;
+  margin-right: 1%;
+  background-color: white;
+  float: left;
+  padding-bottom: 20px;
+}
+
+#my_view_res {
+  width: 40.8%;
+  margin-top: 10px;
+
+  background-color: white;
+  float: right;
+}
+
+#my_followers {
+  /* height: 390px; */
+  /* height: 466px; */
+  width: 20%;
+  margin-top: 10px;
+  margin-left: 1%;
+  margin-right: 8.6%;
+  background-color: white;
+  float: right;
+  padding-bottom: 20px;
+}
+
+.waku {
+  margin-top: -3px;
+  padding: 0 15px;
+}
+
+#my_follow .waku h1, #my_followers .waku h1 {
+  font-size: 1.3em;
+}
+
+
+
+
+
+
+
+
+
+/* 検索結果画面 */
+
+#out_users {
+  height: 220px;
+  width: 20%;
+  margin-top: 10px;
+  margin-left: 8.6%;
+  margin-right: 1%;
+  background-color: white;
+  float: left;
+}
+
+#out_nya {
+  /* height: 390px; */
+  height: 466px;
+  width: 20%;
+  margin-top: 10px;
+  margin-left: 1%;
+  margin-right: 8.6%;
+  background-color: white;
+  float: right;
+}
+
+#out_view_res {
+  width: 40.8%;
+  margin-top: 10px;
+
+  background-color: white;
+  float: right;
+}
+
+/* .waku {
+  margin-top: -3px;
+  padding: 0 15px;
+} */

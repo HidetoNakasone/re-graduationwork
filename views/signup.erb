@@ -1,0 +1,57 @@
+  <main>
+
+    <div id = "content_left">
+      <img src="/imgs/re_pakuri.png">
+    </div>
+
+
+    <div id = "content_right">
+
+      <div id = "form_waku" class="animated fadeInUp">
+
+        <form action="/signup" method="post" enctype="multipart/form-data">
+          <br>
+          <br>
+          <br>
+          アカウント： <input type="text" name="name" required><br>
+          パスワード： <input type="password" name="pass" required>
+          <br>
+          <br>
+          <br>
+          <div style = "margin-left: 26px;">
+            背景画像：<label style="padding-left: 10px; padding-right: 40px;"><input type="file" name="back_img" required style="display: none;"><i class="far fa-image"></i></label>
+            アイコン：<label style="padding-left: 10px;"><input type="file" name="icon_img" required style="display: none;"><i class="far fa-smile-wink"></i></label><br>
+          </div>
+
+          <input type="submit" value="新規登録">
+        </form>
+
+
+
+      </div>
+
+
+      <div id = "link_signup"  class="animated fadeInDown"><a href="/login">ログインへ移動</a></div>
+
+      <br>
+      <%= @flash %>
+
+    </div>
+
+  </main>
+
+  <footer>
+
+    <ul>
+      <li>このサービスについて</li>
+      <li>ヘルプセンター</li>
+      <li>ブログ</li>
+      <li>ステータス</li>
+      <li>規約</li>
+      <li>プライバシーポリシー</li>
+      <li>クッキー</li>
+      <li>マーケティング</li>
+      <li>プロフィール</li>
+    </ul>
+
+  </footer>

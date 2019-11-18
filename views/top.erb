@@ -1,0 +1,120 @@
+
+  <%= @flash %>
+
+  <header>
+    <div id="header_div">
+      <ul>
+        <li><a href="/top">ホーム</a></li>
+        <li><a href="/mypage/">マイページ</a></li>
+        <li><a href="/logout">ログアウト</a></li>
+      </ul>
+      <img id="logo_img" src="/logo/logo.jpg">
+      <form action="#" method="get">
+        <input id="serch_text" type="text" name="key" placeholder="   キーワード検索">
+        <input id="serch_sub" type="submit" value="検索">
+      </form>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
+    <% unless @is_animation %>
+      <div id="about_me">
+    <% else %>
+      <div id="about_me" class = "animated fadeInUp">
+    <% end %>
+
+      <div id="about_me_back">
+        <img src="/user_back/<%= @my_user_id %>_back.jpg">
+      </div>
+      <div class="waku">
+        <a href="/mypage/<%= @my_user_id %>">
+          <img id="about_me_icon" src="/user_icon/<%= @my_user_id %>_icon.jpg">
+        </a>
+        <h1><%= @my_user_name %></h1>
+        <p>&nbsp;</p>
+        <div class="about_me_status">
+          <h1>ツイート</h1>
+          <p><%= @count_tweet %></p>
+        </div>
+        <div class="about_me_status">
+          <h1>フォロー</h1>
+          <p><%= @count_follow %></p>
+        </div>
+        <div class="about_me_status">
+          <h1>フォロワー</h1>
+          <p><%= @count_follower %></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
+    <% unless @is_animation %>
+      <div id="view_followers">
+    <% else %>
+      <div id="view_followers" class = "animated fadeInUp">
+    <% end %>
+
+      <div class="waku">
+        <h1>フォロワー</h1>
+        <% @res_follower.each do |follower| %>
+          <div class="hito">
+            <a href="/mypage/<%= follower['id'] %>"><img src="/user_icon/<%= follower['id'] %>_icon.jpg"></a>
+            <a href="/mypage/<%= follower['id'] %>"><p class="name"><%= follower['user_name'] %></p></a>
+
+            <% unless follower['is_follow'] %>
+              <form action="/foll_system" method="post">
+                <input type="hidden" name="from_url" value="<%= request.path %>">
+                <input type="hidden" name="now_unfollower_id" value="<%= follower['id'] %>">
+                <input class="follow_off" type="submit" value="フォローする" name="add_follow">
+              </form>
+            <% else %>
+            <form action="/foll_system" method="post">
+              <input type="hidden" name="from_url" value="<%= request.path %>">
+              <input type="hidden" name="now_follow_id" value="<%= follower['id'] %>">
+              <input class="follow_on" type="submit" value="フォロー中" name="delete_follow">
+            </form>
+            <% end %>
+
+
+          </div>
+        <% end %>
+
+        <a href="/mypage/<%= @my_user_id %>"><p id="more">more</p></a>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
+    <% unless @is_animation %>
+      <div id="view_follow">
+    <% else %>
+      <div id="view_follow" class = "animated fadeInUp">
+    <% end %>
+
+      <div class="waku">
+        <h1>フォロー</h1>
+        <% @res_follow.each do |follow| %>
+          <div class="hito">
+            <a href="/mypage/<%= follow['id'] %>"><img src="/user_icon/<%= follow['id'] %>_icon.jpg"></a>
+            <a href="/mypage/<%= follow['id'] %>"><p class="name"><%= follow['user_name'] %></p></a>
+            <form action="/foll_system" method="post">
+
+              <input type="hidden" name="from_url" value="<%= request.path %>">
+              <input type="hidden" name="now_follow_id" value="<%= follow['id'] %>">
+              <input class="follow_on" type="submit" value="フォロー中" name="delete_follow">
+
+            </form>
+          </div>
+        <% end %>
+
+        <a href="/mypage/<%= @my_user_id %>"><p id="more">more</p></a>
+      </div>
+
+    </div>
+
+  </main>

@@ -25,6 +25,15 @@ get '/top' do
   # 自分とフォローしているユーザーの投稿取得
   @res = client.exec_params("select * from tweets where creater_id = $1 OR (creater_id IN (select send_id from follows where who_id = $1)) ORDER BY id DESC", [@my_user_id])
 
+  # 取得した投稿の 総リツイート数・総いいね数・ログイン者がいいねしているか、リツイートしているか を取得
+
+
+
+
+
+
+
+
   # フォロワー情報
   @res_follower = client.exec_params("select * from users where id IN (select who_id from follows where send_id = $1) ORDER BY id ASC LIMIT 5;", [@my_user_id]).to_a
 
@@ -153,3 +162,30 @@ post '/signup' do
     redirect '/login'
   end
 end
+
+post '/add_tweet' do
+  if params[:go_file].nil? and params[:go_msg] == ""
+    session[:flash] = "<p class='animated fadeInDown' id = 'flash_info' style='height: 34px; width: 30%; z-index: 2px; background-color: rgb(37, 165, 221); padding-left: 20px; margin: 6px 35% 10px 35%; border-radius: 5px; color: white; font-size: 1.5em; font-weight: solid;'>Info： データが空でした。</p>
+    <style> #header_div { margin-top: -70px; } </style>"
+  else
+    if params[:go_file]
+      file_name = ((0..9).to_a + ("a".."z").to_a + ("A".."Z").to_a).sample(30).join
+      FileUtils.mv(params[:go_file][:tempfile], "./public/up_imgs/#{file_name}.jpg")
+    else
+      file_name = nil
+    end
+
+    unless params[:go_msg] == ""
+      go_msg = CGI.escapeHTML(params[:go_msg]).gsub(/\r\n|\r|\n/, "<br />")
+    else
+      go_msg = nil
+    end
+
+    client.exec_params("INSERT INTO tweets(creater_id, dateinfo, msg, img_name, re_sou_id) VALUES($1, current_timestamp, $2, $3, NULL);", [session[:user_id], go_msg, file_name])
+
+    session[:flash] = "<p class='animated fadeInDown' id = 'flash_info' style='height: 34px; width: 30%; z-index: 2px; background-color: rgb(37, 165, 221); padding-left: 20px; margin: 6px 35% 10px 35%; border-radius: 5px; color: white; font-size: 1.5em; font-weight: solid;'>完了： 投稿が正常に処理されました。</p>
+    <style> #header_div { margin-top: -70px; } </style>"
+  end
+  redirect '/top'
+end
+

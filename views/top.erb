@@ -87,6 +87,28 @@
 
     </div>
 
+    <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
+    <% unless @is_animation %>
+      <div id="view_res">
+    <% else %>
+      <div id="view_res" class = "animated fadeIn">
+    <% end %>
+
+      <!-- 投稿用のフォーム -->
+      <div id="what_now">
+        <img id="form_my_icon" src="/user_icon/<%= @my_user_id %>_icon.jpg">
+        <form id="now_form" enctype="multipart/form-data" action="/add_tweet" method="post">
+          <textarea name="go_msg" placeholder="いまどうしてる？"></textarea>
+          <br>
+          <label><input type="file" accept="image/*" name="go_file" style="display: none;">画像</label>
+          <label><input type="submit" style="display: none;">GO</label>
+        </form>
+      </div>
+
+
+      <div style="height: 160px; background-color: rgb(231, 236, 240); border-top: 20px solid white;"></div>
+
+    </div>
 
 
     <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->

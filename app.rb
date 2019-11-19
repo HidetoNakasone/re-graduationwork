@@ -23,16 +23,31 @@ get '/top' do
   @my_user_name = client.exec_params("select user_name from users where id = $1", [@my_user_id]).first['user_name']
 
   # 自分とフォローしているユーザーの投稿取得
-  @res = client.exec_params("select * from tweets where creater_id = $1 OR (creater_id IN (select send_id from follows where who_id = $1)) ORDER BY id DESC", [@my_user_id])
+  @res = client.exec_params("select * from tweets where creater_id = $1 OR (creater_id IN (select send_id from follows where who_id = $1)) ORDER BY id DESC", [@my_user_id]).to_a
 
-  # 取得した投稿の 総リツイート数・総いいね数・ログイン者がいいねしているか、リツイートしているか を取得
+  # ログインユーザーが いいね しているtwe_idを取得
+  my_iine_lists = []
+  client.exec_params('select twe_id from iine where who_id = $1', [@my_user_id]).each { |i| my_iine_lists.push(i['twe_id']) }
 
+  # ログインユーザーが リツイート しているtwe_idを取得
+  my_retw_lists = []
+  client.exec_params('select retw_id from retw where who_id = $1', [@my_user_id]).each { |i| my_retw_lists.push(i['retw_id']) }
 
-
-
-
-
-
+  # 取得した投稿の "総リツイート数・総いいね数・ログイン者がいいねしているか、リツイートしているか" を反映させる
+  @res.each do |i|
+    if my_iine_lists.include?(i['id'])
+      i['is_iine'] = true
+    else
+      i['is_iine'] = false
+    end
+    if my_retw_lists.include?(i['id'])
+      i['is_retw'] = true
+    else
+      i['is_retw'] = false
+    end
+    i['n_iines'] = client.exec_params('select count(*) as n from iine where twe_id = $1', [i['id']]).first['n'].to_i
+    i['n_retws'] = client.exec_params('select count(*) as n from retw where retw_id = $1', [i['id']]).first['n'].to_i
+  end
 
   # フォロワー情報
   @res_follower = client.exec_params("select * from users where id IN (select who_id from follows where send_id = $1) ORDER BY id ASC LIMIT 5;", [@my_user_id]).to_a

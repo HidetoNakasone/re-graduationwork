@@ -1,29 +1,28 @@
+<%= @flash %>
 
-  <%= @flash %>
+<header>
+  <div id="header_div">
+    <ul>
+      <li><a href="/top">ホーム</a></li>
+      <li><a href="/mypage/">マイページ</a></li>
+      <li><a href="/logout">ログアウト</a></li>
+    </ul>
+    <img id="logo_img" src="/logo/logo.jpg">
+    <form action="#" method="get">
+      <input id="serch_text" type="text" name="key" placeholder="   キーワード検索">
+      <input id="serch_sub" type="submit" value="検索">
+    </form>
+  </div>
+</header>
 
-  <header>
-    <div id="header_div">
-      <ul>
-        <li><a href="/top">ホーム</a></li>
-        <li><a href="/mypage/">マイページ</a></li>
-        <li><a href="/logout">ログアウト</a></li>
-      </ul>
-      <img id="logo_img" src="/logo/logo.jpg">
-      <form action="#" method="get">
-        <input id="serch_text" type="text" name="key" placeholder="   キーワード検索">
-        <input id="serch_sub" type="submit" value="検索">
-      </form>
-    </div>
-  </header>
+<main>
 
-  <main>
-
-    <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
-    <% unless @is_animation %>
-      <div id="about_me">
+  <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
+  <% unless @is_animation %>
+  <div id="about_me">
     <% else %>
-      <div id="about_me" class = "animated fadeInUp">
-    <% end %>
+    <div id="about_me" class="animated fadeInUp">
+      <% end %>
 
       <div id="about_me_back">
         <img src="/user_back/<%= @my_user_id %>_back.jpg">
@@ -51,24 +50,26 @@
 
     <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
     <% unless @is_animation %>
-      <div id="view_followers">
-    <% else %>
-      <div id="view_followers" class = "animated fadeInUp">
-    <% end %>
+    <div id="view_followers">
+      <% else %>
+      <div id="view_followers" class="animated fadeInUp">
+        <% end %>
 
-      <div class="waku">
-        <h1>フォロワー</h1>
-        <% @res_follower.each do |follower| %>
+        <div class="waku">
+          <h1>フォロワー</h1>
+          <% @res_follower.each do |follower| %>
           <div class="hito">
             <a href="/mypage/<%= follower['id'] %>"><img src="/user_icon/<%= follower['id'] %>_icon.jpg"></a>
-            <a href="/mypage/<%= follower['id'] %>"><p class="name"><%= follower['user_name'] %></p></a>
+            <a href="/mypage/<%= follower['id'] %>">
+              <p class="name"><%= follower['user_name'] %></p>
+            </a>
 
             <% unless follower['is_follow'] %>
-              <form action="/foll_system" method="post">
-                <input type="hidden" name="from_url" value="<%= request.path %>">
-                <input type="hidden" name="now_unfollower_id" value="<%= follower['id'] %>">
-                <input class="follow_off" type="submit" value="フォローする" name="add_follow">
-              </form>
+            <form action="/foll_system" method="post">
+              <input type="hidden" name="from_url" value="<%= request.path %>">
+              <input type="hidden" name="now_unfollower_id" value="<%= follower['id'] %>">
+              <input class="follow_off" type="submit" value="フォローする" name="add_follow">
+            </form>
             <% else %>
             <form action="/foll_system" method="post">
               <input type="hidden" name="from_url" value="<%= request.path %>">
@@ -79,64 +80,325 @@
 
 
           </div>
-        <% end %>
+          <% end %>
 
-        <a href="/mypage/<%= @my_user_id %>"><p id="more">more</p></a>
+          <a href="/mypage/<%= @my_user_id %>">
+            <p id="more">more</p>
+          </a>
+
+        </div>
 
       </div>
 
-    </div>
-
-    <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
-    <% unless @is_animation %>
+      <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
+      <% unless @is_animation %>
       <div id="view_res">
-    <% else %>
-      <div id="view_res" class = "animated fadeIn">
-    <% end %>
+        <% else %>
+        <div id="view_res" class="animated fadeIn">
+          <% end %>
 
-      <!-- 投稿用のフォーム -->
-      <div id="what_now">
-        <img id="form_my_icon" src="/user_icon/<%= @my_user_id %>_icon.jpg">
-        <form id="now_form" enctype="multipart/form-data" action="/add_tweet" method="post">
-          <textarea name="go_msg" placeholder="いまどうしてる？"></textarea>
-          <br>
-          <label><input type="file" accept="image/*" name="go_file" style="display: none;">画像</label>
-          <label><input type="submit" style="display: none;">GO</label>
-        </form>
-      </div>
-
-
-      <div style="height: 160px; background-color: rgb(231, 236, 240); border-top: 20px solid white;"></div>
-
-    </div>
-
-
-    <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
-    <% unless @is_animation %>
-      <div id="view_follow">
-    <% else %>
-      <div id="view_follow" class = "animated fadeInUp">
-    <% end %>
-
-      <div class="waku">
-        <h1>フォロー</h1>
-        <% @res_follow.each do |follow| %>
-          <div class="hito">
-            <a href="/mypage/<%= follow['id'] %>"><img src="/user_icon/<%= follow['id'] %>_icon.jpg"></a>
-            <a href="/mypage/<%= follow['id'] %>"><p class="name"><%= follow['user_name'] %></p></a>
-            <form action="/foll_system" method="post">
-
-              <input type="hidden" name="from_url" value="<%= request.path %>">
-              <input type="hidden" name="now_follow_id" value="<%= follow['id'] %>">
-              <input class="follow_on" type="submit" value="フォロー中" name="delete_follow">
-
+          <!-- 投稿用のフォーム -->
+          <div id="what_now">
+            <img id="form_my_icon" src="/user_icon/<%= @my_user_id %>_icon.jpg">
+            <form id="now_form" enctype="multipart/form-data" action="/add_tweet" method="post">
+              <textarea name="go_msg" placeholder="いまどうしてる？"></textarea>
+              <br>
+              <label><input type="file" accept="image/*" name="go_file" style="display: none;">画像</label>
+              <label><input type="submit" style="display: none;">GO</label>
             </form>
           </div>
-        <% end %>
 
-        <a href="/mypage/<%= @my_user_id %>"><p id="more">more</p></a>
-      </div>
 
-    </div>
+          <div class="waku">
+            <% @res.each do |row| %>
+              <% if row['re_sou_id'].nil? %>
 
-  </main>
+
+
+
+                <!-- 以降、リツイートでない場合。 =========================== -->
+
+                <% if @res_num.nil?
+                  @res_num = 1
+                else
+                  @res_num += 1
+                end %>
+
+                <div class="res" id = "res_num_<%= @res_num %>">
+
+                  <div style = "margin-left: 0px;">
+
+                    <!-- 投稿者の情報/各Mypageへのリンク -->
+                    <a href="/mypage/<%= row['creater_id'] %>">
+                      <img class="icon_img" src="/user_icon/<%= row['creater_id'] %>_icon.jpg">
+                    </a>
+                    <a href="/mypage/<%= row['creater_id'] %>">
+                      <p class="name"><%= row['user_name'] %></p>
+                    </a>
+                    <p class="time"><%= row['dateinfo'] %></p>
+
+                    <!-- 投稿内容の表示部分 -->
+                    <div class="res_main">
+
+                      <p><%= row['msg'] %></p>
+
+                      <% unless row['img_name'].nil? %>
+                        <img class="up_img" src="/up_imgs/<%= row['img_name'] %>.jpg">
+                      <% end %>
+
+                      <%
+                      # 自分が 画像 をもっているのか、次に教える。
+                      # この画像有無で、ページ内ジャンプの位置を調整している。
+                      if @pre_img_is.nil?
+                        @pre_img_is = false
+                      end
+
+                      # 自分が画像もってるか。
+                      @my_img_is = false
+                      if row['img_name'].nil?
+                      else
+                        @my_img_is = true
+                      end
+                      %>
+
+
+
+                      <!-- いいね や リツイート のトリガー -->
+                      <div class = "res_info">
+
+                        <% if row['is_retw'] %>
+
+                          <!-- ログイン者がリツートしている状態 -->
+                          <label class="retw_on"><i class="fas fa-retweet"></i></label>
+
+                        <% else %>
+
+                          <form action="/retw_system" method="post">
+                            <input type="hidden" name="res_num" value="<%= @res_num %>">
+                            <input type="hidden" name="pre_img_is" value="<%= @pre_img_is %>">
+                            <input type="hidden" name="my_img_is" value="<%= @my_img_is %>">
+                            <input type="hidden" name="from_url" value="<%= request.path %>">
+                            <input type="hidden" name="twe_id" value="<%= row['id'] %>">
+                            <input type="hidden" name="retw_on">
+                            <label class="retw_off"><input type="submit" style="display: none;"><i class="fas fa-retweet"></i></label>
+                          </form>
+
+                        <% end %>
+                        <p class="icon_retw">
+                          <%= row['n_retws'] %>
+                        </p>
+
+
+
+
+
+                        <% if row['is_iine'] %>
+
+                          <form action="/iine_system" method="post" style="margin-left: 52px; margin-top: -38px;">
+                            <input type="hidden" name="res_num" value="<%= @res_num %>">
+                            <input type="hidden" name="pre_img_is" value="<%= @pre_img_is %>">
+                            <input type="hidden" name="my_img_is" value="<%= @my_img_is %>">
+                            <input type="hidden" name="from_url" value="<%= request.path %>">
+                            <input type="hidden" name="iine_off">
+                            <input type="hidden" name="twe_id" value="<%= row['id'] %>">
+                            <label class="iine_on"><input type="submit" style="display: none;"><i class="fas fa-heart"></i></label>
+                          </form>
+
+
+                        <% else %>
+
+                          <form action="/iine_system" method="post" style="margin-left: 52px; margin-top: -38px;">
+                            <input type="hidden" name="res_num" value="<%= @res_num %>">
+                            <input type="hidden" name="pre_img_is" value="<%= @pre_img_is %>">
+                            <input type="hidden" name="my_img_is" value="<%= @my_img_is %>">
+                            <input type="hidden" name="from_url" value="<%= request.path %>">
+                            <input type="hidden" name="twe_id" value="<%= row['id'] %>">
+                            <input type="hidden" name="iine_on">
+                            <label class="iine_off"><input type="submit" style="display: none;"><i class="far fa-heart"></i></label>
+                          </form>
+
+                        <% end %>
+                        <p class="icon_iine">
+                          <%= row['n_iines'] %>
+                        </p>
+                      <!-- res_infここまで -->
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+
+                <%
+                # 自分が 画像 をもっているのか、次に教える。
+                if row['img_name'].nil?
+                  @pre_img_is = false
+                else
+                  @pre_img_is = true
+                end
+                %>
+
+
+              <% else %>
+                <!-- 以降、リツイートである 場合 =========================== -->
+
+                <!-- 表示している投稿に上から番号をつけて、あとで 「いいね・リツート登録処理後」 そこにページ内ジャンプする。 -->
+                <%
+                if @res_num.nil?
+                  @res_num = 1
+                else
+                  @res_num += 1
+                end
+                %>
+
+
+                <div class="res" id = "res_num_<%= @res_num %>">
+
+                  <div class="retw_top">
+                    <a href="/mypage/<%= row['creater_id'] %>">
+                      <img class="retw_icon_img" src="/user_icon/<%= row['creater_id'] %>_icon.jpg">
+                    </a>
+                    <a href="/mypage/<%= row['creater_id'] %>">
+                      <p class="retw_name">
+                        <i class="fas fa-retweet"></i>
+                        <span style="color: rgb(237, 144, 37);"><%= row['user_name'] %></span>&nbsp;さんがリツイート
+                      </p>
+                    </a>
+                    <p class="retw_time"><%= row['dateinfo'] %></p>
+                  </div>
+
+                  <div style = "margin-left: 0px;">
+
+                    <a href="/mypage/<%= row['re_sou_tweet']['creater_id'] %>">
+                      <img class="icon_img" src="/user_icon/<%= row['re_sou_tweet']['creater_id'] %>_icon.jpg">
+                    </a>
+                    <a href="/mypage/<%= row['re_sou_tweet']['creater_id'] %>">
+                      <p class="name"><%= row['re_sou_tweet']['user_name'] %></p>
+                    </a>
+                    <p class="time"><%= row['re_sou_tweet']['dateinfo'] %></p>
+
+
+                    <div class="res_main">
+
+                      <p><%= row['re_sou_tweet']['msg'] %></p>
+
+                      <% if row['re_sou_tweet']['img_name'].nil?
+                      else %>
+                        <img class="up_img" src="/up_imgs/<%= row['re_sou_tweet']['img_name'] %>.jpg">
+                      <% end %>
+
+                      <div class = "res_info">
+
+
+                        <% if row['is_retw'] %>
+
+                          <label class="retw_on"><i class="fas fa-retweet"></i></label>
+
+                        <% else %>
+
+                          <form action="retw_system" method="post">
+                            <input type="hidden" name="res_num" value="<%= @res_num %>">
+                            <input type="hidden" name="pre_img_is" value="<%= @pre_img_is %>">
+                            <input type="hidden" name="my_img_is" value="<%= @my_img_is %>">
+                            <input type="hidden" name="from_url" value="<%= request.path %>">
+                            <input type="hidden" name="twe_id" value="<%= row['re_sou_tweet']['id'] %>">
+                            <input type="hidden" name="retw_on">
+                            <label class="retw_off"><input type="submit" style="display: none;"><i class="fas fa-retweet"></i></label>
+                          </form>
+
+                        <% end %>
+                        <p class="icon_retw">
+                          <%= row['n_retws'] %>
+                        </p>
+
+
+
+                        <% if row['is_iine'] %>
+
+                          <form action="/iine_system" method="post" style="margin-left: 52px; margin-top: -38px;">
+                            <input type="hidden" name="res_num" value="<%= @res_num %>">
+                            <input type="hidden" name="pre_img_is" value="<%= @pre_img_is %>">
+                            <input type="hidden" name="my_img_is" value="<%= @my_img_is %>">
+                            <input type="hidden" name="from_url" value="<%= request.path %>">
+                            <input type="hidden" name="iine_off">
+                            <input type="hidden" name="twe_id" value="<%= row['re_sou_tweet']['id'] %>">
+                            <label class="iine_on"><input type="submit" style="display: none;"><i class="fas fa-heart"></i></label>
+                          </form>
+
+                        <% else %>
+
+                          <form action="/iine_system" method="post" style="margin-left: 52px; margin-top: -38px;">
+                            <input type="hidden" name="res_num" value="<%= @res_num %>">
+                            <input type="hidden" name="pre_img_is" value="<%= @pre_img_is %>">
+                            <input type="hidden" name="my_img_is" value="<%= @my_img_is %>">
+                            <input type="hidden" name="from_url" value="<%= request.path %>">
+                            <input type="hidden" name="twe_id" value="<%= row['re_sou_tweet']['id'] %>">
+                            <input type="hidden" name="iine_on">
+                            <label class="iine_off"><input type="submit" style="display: none;"><i class="far fa-heart"></i></label>
+                          </form>
+
+                        <% end %>
+                        <p class="icon_iine">
+                          <%= row['n_iines'] %>
+                        </p>
+
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+                <%
+                # 自分が 画像 をもっているのか、次に教える。
+                if row['re_sou_tweet']['img_name'].nil?
+                  @pre_img_is = false
+                else
+                  @pre_img_is = true
+                end %>
+
+              <% end #リツートかどうかで内容を変えるif文のend %>
+
+            <% end #ツイートの@resのeach文 ここまで %>
+
+          </div>
+
+
+          <div style="height: 160px; background-color: rgb(231, 236, 240); border-top: 20px solid white;"></div>
+
+        </div>
+
+
+        <!-- どのルーティングを通ったかで、アニメーションをオンオフしてる。 -->
+        <% unless @is_animation %>
+        <div id="view_follow">
+          <% else %>
+          <div id="view_follow" class="animated fadeInUp">
+            <% end %>
+
+            <div class="waku">
+              <h1>フォロー</h1>
+              <% @res_follow.each do |follow| %>
+              <div class="hito">
+                <a href="/mypage/<%= follow['id'] %>"><img src="/user_icon/<%= follow['id'] %>_icon.jpg"></a>
+                <a href="/mypage/<%= follow['id'] %>">
+                  <p class="name"><%= follow['user_name'] %></p>
+                </a>
+                <form action="/foll_system" method="post">
+
+                  <input type="hidden" name="from_url" value="<%= request.path %>">
+                  <input type="hidden" name="now_follow_id" value="<%= follow['id'] %>">
+                  <input class="follow_on" type="submit" value="フォロー中" name="delete_follow">
+
+                </form>
+              </div>
+              <% end %>
+
+              <a href="/mypage/<%= @my_user_id %>">
+                <p id="more">more</p>
+              </a>
+            </div>
+
+          </div>
+
+</main>

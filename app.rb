@@ -6,13 +6,38 @@ require 'pg'
 enable :sessions
 
 def client
-  PG::connect(
+  @client ||= PG::connect(
     dbname: 'regra'
   )
 end
 
 def login_check
   redirect '/login' if session[:user_id].nil?
+end
+
+def dateinfo_converter(dateinfo)
+  # ツイートの投稿日時に関して
+  unless dateinfo.nil?
+    if dateinfo > Time.now - 60
+      # 1分 以内
+      return "#{(Time.now - dateinfo).floor}秒前"
+    elsif dateinfo > Time.now - (60*60)
+      # 1時間 以内
+      return "#{((Time.now - dateinfo)/(60)).floor}分前"
+    elsif dateinfo > Time.now - (24*60*60)
+      # 24時間 以内
+      return "#{((Time.now - dateinfo)/(60*60)).floor}時間前"
+    elsif dateinfo > Time.now - (30*24*60*60)
+      # 1月 以内
+      return "#{((Time.now - dateinfo)/(24*60*60)).floor}日前"
+    elsif dateinfo > Time.now - (365*24*60*60)
+      # 1年 以内
+      return "#{((Time.now - dateinfo)/(30*24*60*60)).floor}ヶ月前"
+    else
+      # 1年 以上
+      return "#{((Time.now - dateinfo)/(365*24*60*60)).floor}年前"
+    end
+  end
 end
 
 get '/top' do
@@ -23,7 +48,19 @@ get '/top' do
   @my_user_name = client.exec_params("select user_name from users where id = $1", [@my_user_id]).first['user_name']
 
   # 自分とフォローしているユーザーの投稿取得
-  @res = client.exec_params("select * from tweets where creater_id = $1 OR (creater_id IN (select send_id from follows where who_id = $1)) ORDER BY id DESC", [@my_user_id]).to_a
+  @res = client.exec_params("select tweets.*, users.user_name from tweets left outer join users on tweets.creater_id = users.id where creater_id = $1 OR (creater_id IN (select send_id from follows where who_id = $1)) ORDER BY tweets.id DESC;", [@my_user_id]).to_a
+
+  # 日付情報を 見やすい形に変形 した形を再代入させる
+  @res.each { |i| i['dateinfo'] = dateinfo_converter(Time.parse(i['dateinfo'])) }
+
+  # 取得した投稿がリツートであれば、その元のツイート内容を取得する
+  @res.each do |i|
+    unless i['re_sou_id'].nil?
+      i['re_sou_tweet'] = client.exec_params('select * from tweets where id = $1', [i['re_sou_id'].to_i]).first
+      # 日付情報も上と同じ様に変形を代入
+      i['re_sou_tweet']['dateinfo'] = dateinfo_converter(Time.parse(i['re_sou_tweet']['dateinfo']))
+    end
+  end
 
   # ログインユーザーが いいね しているtwe_idを取得
   my_iine_lists = []
@@ -35,18 +72,21 @@ get '/top' do
 
   # 取得した投稿の "総リツイート数・総いいね数・ログイン者がいいねしているか、リツイートしているか" を反映させる
   @res.each do |i|
-    if my_iine_lists.include?(i['id'])
+    target_id = i['id']
+    # その投稿がリツートなら、リツート元の投稿に対して いいね・リツート しているか調べる。
+    target_id = i['re_sou_id'] unless i['re_sou_id'].nil?
+    if my_iine_lists.include?(target_id)
       i['is_iine'] = true
     else
       i['is_iine'] = false
     end
-    if my_retw_lists.include?(i['id'])
+    if my_retw_lists.include?(target_id)
       i['is_retw'] = true
     else
       i['is_retw'] = false
     end
-    i['n_iines'] = client.exec_params('select count(*) as n from iine where twe_id = $1', [i['id']]).first['n'].to_i
-    i['n_retws'] = client.exec_params('select count(*) as n from retw where retw_id = $1', [i['id']]).first['n'].to_i
+    i['n_iines'] = client.exec_params('select count(*) as n from iine where twe_id = $1', [target_id]).first['n'].to_i
+    i['n_retws'] = client.exec_params('select count(*) as n from retw where retw_id = $1', [target_id]).first['n'].to_i
   end
 
   # フォロワー情報
@@ -79,7 +119,7 @@ get '/top' do
   @flash = session[:flash]
   session[:flash] = nil
   # いいね と リツイート登録 の時はアニメーションをオフにしたいので。
-  @is_animation = session[:is_animation]
+  @is_animation = session[:is_animation] || true
   erb :top
 end
 

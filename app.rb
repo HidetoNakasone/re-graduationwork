@@ -97,7 +97,7 @@ get '/top' do
   @res_follower = client.exec_params("select * from users where id IN (select who_id from follows where send_id = $1) ORDER BY id ASC LIMIT 5;", [@my_user_id]).to_a
 
   my_follow_lists = []
-  client.exec_params('select send_id from follows where who_id = $1', [1]).each { |i| my_follow_lists.push(i['send_id']) }
+  client.exec_params('select send_id from follows where who_id = $1', [@my_user_id]).each { |i| my_follow_lists.push(i['send_id']) }
 
   @res_follower.each do |i|
     if my_follow_lists.include?(i['id'])
@@ -232,7 +232,7 @@ get '/mypage/:target_user_id' do
   @res_follower = client.exec_params("select * from users where id IN (select who_id from follows where send_id = $1) ORDER BY id ASC;", [@target_user_id]).to_a
 
   target_user_follow_lists = []
-  client.exec_params('select send_id from follows where who_id = $1', [1]).each { |i| target_user_follow_lists.push(i['send_id']) }
+  client.exec_params('select send_id from follows where who_id = $1', [@target_user_id]).each { |i| target_user_follow_lists.push(i['send_id']) }
 
   @res_follower.each do |i|
     if target_user_follow_lists.include?(i['id'])
@@ -386,3 +386,12 @@ post '/add_tweet' do
   redirect '/top'
 end
 
+post '/foll_system' do
+  # 解除処理
+  client.exec_params('delete from follows where who_id = $1 and send_id = $2', [session[:user_id], params[:now_follow_id]]) if params[:delete_follow] == "フォロー中"
+
+  # 追加処理
+  client.exec_params('insert into follows(who_id, send_id) values($1, $2)', [session[:user_id], params[:now_unfollower_id].to_i]) if params[:add_follow] == "フォローする"
+
+  redirect params[:from_url]
+end

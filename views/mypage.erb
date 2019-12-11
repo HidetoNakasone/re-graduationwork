@@ -136,7 +136,7 @@
       <div class = "waku">
         <h1>フォロワー</h1>
         <% @res_follower.each do |follower| %>
-          <% if follower['id'] != @my_user_id %>
+          <% if follower['id'].to_i != @my_user_id %>
             <div class = "hito">
               <a href="/mypage/<%= follower['id'] %>"><img src="/user_icon/<%= follower['id'] %>_icon.jpg"></a>
               <a href="/mypage/<%= follower['id'] %>"><p class="name"><%= follower['user_name'] %></p></a>
@@ -441,7 +441,7 @@
           <h1>フォロー</h1>
 
           <% @res_follow.each do |follow| %>
-            <% if follow['id'] != @my_user_id %>
+            <% if follow['id'].to_i != @my_user_id %>
               <div class = "hito">
                 <a href="/mypage/<%= follow['id'] %>"><img src="/user_icon/<%= follow['id'] %>_icon.jpg"></a>
                 <a href="/mypage/<%= follow['id'] %>"><p class="name"><%= follow['user_name'] %></p></a>

@@ -201,15 +201,15 @@ get '/mypage/:target_user_id' do
     end
   end
 
-  # そのターゲットユーザーが いいね しているtwe_idを取得
+  # ログインユーザーが いいね しているtwe_idを取得
   my_iine_lists = []
-  client.exec_params('select twe_id from iine where who_id = $1', [@target_user_id]).each { |i| my_iine_lists.push(i['twe_id']) }
+  client.exec_params('select twe_id from iine where who_id = $1', [@my_user_id]).each { |i| my_iine_lists.push(i['twe_id']) }
 
-  # そのターゲットユーザーが リツイート しているtwe_idを取得
+  # ログインユーザーが リツイート しているtwe_idを取得
   my_retw_lists = []
-  client.exec_params('select retw_id from retw where who_id = $1', [@target_user_id]).each { |i| my_retw_lists.push(i['retw_id']) }
+  client.exec_params('select retw_id from retw where who_id = $1', [@my_user_id]).each { |i| my_retw_lists.push(i['retw_id']) }
 
-  # 取得した投稿の "総リツイート数・総いいね数・そのターゲットユーザーがいいねしているか、リツイートしているか" を反映させる
+  # 取得した投稿の "総リツイート数・総いいね数・ログインユーザーがいいねしているか、リツイートしているか" を反映させる
   @res.each do |i|
     target_id = i['id']
     # その投稿がリツートなら、リツート元の投稿に対して いいね・リツート しているか調べる。
@@ -231,11 +231,11 @@ get '/mypage/:target_user_id' do
   # そのターゲットユーザーのフォロワー情報
   @res_follower = client.exec_params("select * from users where id IN (select who_id from follows where send_id = $1) ORDER BY id ASC;", [@target_user_id]).to_a
 
-  target_user_follow_lists = []
-  client.exec_params('select send_id from follows where who_id = $1', [@target_user_id]).each { |i| target_user_follow_lists.push(i['send_id']) }
+  my_user_follow_lists = []
+  client.exec_params('select send_id from follows where who_id = $1', [@my_user_id]).each { |i| my_user_follow_lists.push(i['send_id']) }
 
   @res_follower.each do |i|
-    if target_user_follow_lists.include?(i['id'])
+    if my_user_follow_lists.include?(i['id'])
       i['is_follow'] = true
     else
       i['is_follow'] = false
@@ -387,11 +387,43 @@ post '/add_tweet' do
 end
 
 post '/foll_system' do
-  # 解除処理
-  client.exec_params('delete from follows where who_id = $1 and send_id = $2', [session[:user_id], params[:now_follow_id]]) if params[:delete_follow] == "フォロー中"
+  login_check()
 
-  # 追加処理
-  client.exec_params('insert into follows(who_id, send_id) values($1, $2)', [session[:user_id], params[:now_unfollower_id].to_i]) if params[:add_follow] == "フォローする"
+  # 解除処理
+  client.exec_params('delete from follows where who_id = $1 and send_id = $2', [session[:user_id], params[:now_follow_id].to_i]) if params[:delete_follow] == "フォロー中"
+
+  # ログインユーザーが自分自身をフォローできない様にする
+  unless params[:now_unfollower_id].to_i == session[:user_id]
+    # 追加処理
+    client.exec_params('insert into follows(who_id, send_id) values($1, $2)', [session[:user_id], params[:now_unfollower_id].to_i]) if params[:add_follow] == "フォローする"
+  end
 
   redirect params[:from_url]
+end
+
+post '/iine_system' do
+  login_check()
+
+  # 登録処理
+  client.exec_params('insert into iine(who_id, twe_id) values($1, $2)', [session[:user_id], params[:twe_id].to_i]) if params[:iine_on]
+
+  # 解除処理
+  client.exec_params('delete from iine where who_id = $1 and twe_id = $2', [session[:user_id], params[:twe_id].to_i]) if params[:iine_off]
+
+  # このルーティングを通った場合、animatedのアニメーションをoff
+  session[:is_animation] = false
+
+  # === redirect で元の投稿の表示部分へ戻そうとしている。 ===
+  # 上の投稿が画像なら、それを表示させる。
+  if params[:pre_img_is] == "true"
+    # ただ、自分が画像持っているなら、自分を表示。
+    if params[:my_img_is] == "true"
+      redirect "#{params[:from_url]}#res_num_#{params[:res_num].to_i - 0}"
+    else
+      redirect "#{params[:from_url]}#res_num_#{params[:res_num].to_i - 1}"
+    end
+  else
+    # 上が画像でない。なら、2 か 1 つ前の投稿を表示させる。 迷っている。
+    redirect "#{params[:from_url]}#res_num_#{params[:res_num].to_i - 2}"
+  end
 end

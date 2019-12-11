@@ -40,6 +40,10 @@ def dateinfo_converter(dateinfo)
   end
 end
 
+get '/' do
+  redirect '/top'
+end
+
 get '/top' do
   login_check()
 
@@ -89,7 +93,7 @@ get '/top' do
     i['n_retws'] = client.exec_params('select count(*) as n from retw where retw_id = $1', [target_id]).first['n'].to_i
   end
 
-  # フォロワー情報
+  # フォロワー情報： 5人
   @res_follower = client.exec_params("select * from users where id IN (select who_id from follows where send_id = $1) ORDER BY id ASC LIMIT 5;", [@my_user_id]).to_a
 
   my_follow_lists = []
@@ -103,17 +107,17 @@ get '/top' do
     end
   end
 
-  # フォロー情報
+  # フォロー情報： 5人
   @res_follow = client.exec_params("select * from users where id IN (select send_id from follows where who_id = $1) ORDER BY id ASC LIMIT 5;", [@my_user_id])
 
   # フォロー数
-  @count_follow = client.exec_params("select count(who_id = $1 or null) as n from follows", [@my_user_id]).first['n'].to_i
+  @count_follow = client.exec_params("select count(*) as n from follows where who_id = $1", [@my_user_id]).first['n'].to_i
 
   # フォロワー数
-  @count_follower = client.exec_params("select count(send_id = $1 or null) as n from follows", [@my_user_id]).first['n'].to_i
+  @count_follower = client.exec_params("select count(*) as n from follows where send_id = $1", [@my_user_id]).first['n'].to_i
 
   # ツイート数
-  @count_tweet = client.exec_params("select count(creater_id = $1 or null) as n from tweets", [@my_user_id]).first['n'].to_i
+  @count_tweet = client.exec_params("select count(*) as n from tweets where creater_id = $1", [@my_user_id]).first['n'].to_i
 
   @title = 'TOPページ'
   @flash = session[:flash]
@@ -121,6 +125,144 @@ get '/top' do
   # いいね と リツイート登録 の時はアニメーションをオフにしたいので。
   @is_animation = session[:is_animation] || true
   erb :top
+end
+
+get '/mypage' do
+  redirect "/mypage/#{session[:user_id]}"
+end
+
+get '/mypage/' do
+  redirect "/mypage/#{session[:user_id]}"
+end
+
+get '/mypage/:target_user_id' do
+  login_check()
+
+  @target_user_id = params['target_user_id'].to_i
+
+  # 指定されたターゲットユーザーが存在しているか判定し、もし存在して居ないのであればtopへリダイレクト！
+  res_target_user_infos = client.exec_params('select user_name, user_profile from users where id = $1', [@target_user_id]).first
+
+  if res_target_user_infos.nil?
+    session[:flash] = "<p class='animated fadeInDown' id = 'flash_info' style='
+      height: 34px;
+      width: 30%;
+      z-index: 2px;
+
+      background-color: rgb(37, 165, 221);
+      padding-left: 20px;
+
+      margin: 6px 35% 10px 35%;
+      border-radius: 5px;
+      color: white;
+      font-size: 1.5em;
+      font-weight: solid;
+      text-align: center;
+    '>ユーザーが存在しません。</p>
+    <style> #header_div { margin-top: -70px; } </style>"
+    redirect '/top'
+  end
+
+  @target_user_name = res_target_user_infos['user_name']
+  @target_user_profile = res_target_user_infos['user_profile']
+
+  # ログインユーザーについての情報を取得
+  @my_user_id = session[:user_id]
+  @my_user_name = client.exec_params("select user_name from users where id = $1", [@my_user_id]).first['user_name']
+
+  if @target_user_id == @my_user_id
+    @is_same = true
+
+    @page_res_title = "<span style='font-weight: bold; color: rgb(37, 165, 221);'>" + @target_user_name + "</span>"
+
+    # 自分のみ が投稿した ツイートを読み込む
+    @res = client.exec_params("select tweets.*, users.user_name from tweets left outer join users on tweets.creater_id = users.id where creater_id = $1 ORDER BY tweets.id DESC;", [@my_user_id]).to_a
+  else
+    @is_same = false
+
+    @page_res_title = "<span style='font-weight: bold; color: rgb(37, 165, 221);'>" + @target_user_name + "</span>&nbsp;の投稿・<span style='font-weight: bold; color: rgb(37, 165, 221);'>フォローユーザー</span>"
+
+    # そのターゲットユーザーの投稿と、その人がフォローしているアカウントの投稿一覧を取得
+    @res = client.exec_params("select tweets.*, users.user_name from tweets left outer join users on tweets.creater_id = users.id where creater_id = $1 OR (creater_id IN (select send_id from follows where who_id = $1)) ORDER BY tweets.id DESC;", [@target_user_id]).to_a
+
+    # ログインしているユーザーが、そのユーザーをフォローしているか
+    @is_follow = !(client.exec_params('select id from follows where who_id = $1 and send_id = $2', [@my_user_id, @target_user_id]).first.nil?)
+  end
+
+  # 日付情報を 見やすい形に変形 した形を再代入させる
+  @res.each { |i| i['dateinfo'] = dateinfo_converter(Time.parse(i['dateinfo'])) }
+
+  # 取得した投稿がリツートであれば、その元のツイート内容を取得する
+  @res.each do |i|
+    unless i['re_sou_id'].nil?
+      i['re_sou_tweet'] = client.exec_params('select * from tweets where id = $1', [i['re_sou_id'].to_i]).first
+      # 日付情報も上と同じ様に変形を代入
+      i['re_sou_tweet']['dateinfo'] = dateinfo_converter(Time.parse(i['re_sou_tweet']['dateinfo']))
+    end
+  end
+
+  # そのターゲットユーザーが いいね しているtwe_idを取得
+  my_iine_lists = []
+  client.exec_params('select twe_id from iine where who_id = $1', [@target_user_id]).each { |i| my_iine_lists.push(i['twe_id']) }
+
+  # そのターゲットユーザーが リツイート しているtwe_idを取得
+  my_retw_lists = []
+  client.exec_params('select retw_id from retw where who_id = $1', [@target_user_id]).each { |i| my_retw_lists.push(i['retw_id']) }
+
+  # 取得した投稿の "総リツイート数・総いいね数・そのターゲットユーザーがいいねしているか、リツイートしているか" を反映させる
+  @res.each do |i|
+    target_id = i['id']
+    # その投稿がリツートなら、リツート元の投稿に対して いいね・リツート しているか調べる。
+    target_id = i['re_sou_id'] unless i['re_sou_id'].nil?
+    if my_iine_lists.include?(target_id)
+      i['is_iine'] = true
+    else
+      i['is_iine'] = false
+    end
+    if my_retw_lists.include?(target_id)
+      i['is_retw'] = true
+    else
+      i['is_retw'] = false
+    end
+    i['n_iines'] = client.exec_params('select count(*) as n from iine where twe_id = $1', [target_id]).first['n'].to_i
+    i['n_retws'] = client.exec_params('select count(*) as n from retw where retw_id = $1', [target_id]).first['n'].to_i
+  end
+
+  # そのターゲットユーザーのフォロワー情報
+  @res_follower = client.exec_params("select * from users where id IN (select who_id from follows where send_id = $1) ORDER BY id ASC;", [@target_user_id]).to_a
+
+  target_user_follow_lists = []
+  client.exec_params('select send_id from follows where who_id = $1', [1]).each { |i| target_user_follow_lists.push(i['send_id']) }
+
+  @res_follower.each do |i|
+    if target_user_follow_lists.include?(i['id'])
+      i['is_follow'] = true
+    else
+      i['is_follow'] = false
+    end
+  end
+
+  # フォロー情報
+  @res_follow = client.exec_params("select * from users where id IN (select send_id from follows where who_id = $1) ORDER BY id ASC;", [@target_user_id])
+
+  # フォロー数
+  @count_follow = client.exec_params("select count(*) as n from follows where who_id = $1", [@target_user_id]).first['n'].to_i
+
+  # フォロワー数
+  @count_follower = client.exec_params("select count(*) as n from follows where send_id = $1", [@target_user_id]).first['n'].to_i
+
+  # ツイート数
+  @count_tweet = client.exec_params("select count(*) as n from tweets where creater_id = $1", [@target_user_id]).first['n'].to_i
+
+  # いいね数
+  @count_iine = client.exec_params("select count(*) as n from iine where who_id = $1", [@target_user_id]).first['n'].to_i
+
+  @title = "#{@target_user_name}さんのページ"
+  @flash = session[:flash]
+  session[:flash] = nil
+  # いいね と リツイート登録 の時はアニメーションをオフにしたいので。
+  @is_animation = session[:is_animation] || true
+  erb :mypage
 end
 
 get '/login' do
@@ -134,7 +276,7 @@ end
 post '/login' do
   @res = client.exec_params('select * from users where user_name=$1 and user_pass=$2', [params[:name], params[:pass]]).first
 
-  session[:user_id] = @res['id'] unless @res.nil?
+  session[:user_id] = @res['id'].to_i unless @res.nil?
 
   unless session[:user_id].nil?
     session[:flash] = "<p class='animated fadeInDown' id = 'flash_info' style='

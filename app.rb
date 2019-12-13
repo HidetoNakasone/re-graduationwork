@@ -1,13 +1,24 @@
 
-require 'sinatra'
-require 'sinatra/reloader'
-require 'pg'
+require 'bundler'
+Bundler.require
+
+# 開発環境のみ実行 (Heroku環境だと実行しない)
+if development?
+  require 'sinatra/reloader'
+  require 'dotenv'
+  Dotenv.load ".env"
+end
 
 enable :sessions
 
 def client
+  uri = URI.parse(ENV['DATABASE_URL'])
   @client ||= PG::connect(
-    dbname: 'regra'
+    host: uri.hostname,
+    dbname: uri.path[1..-1],
+    user: uri.user,
+    port: uri.port,
+    password: uri.password
   )
 end
 
@@ -119,6 +130,8 @@ get '/top' do
   # ツイート数
   @count_tweet = client.exec_params("select count(*) as n from tweets where creater_id = $1", [@my_user_id]).first['n'].to_i
 
+  client.finish
+
   @title = 'TOPページ'
   @flash = session[:flash]
   session[:flash] = nil
@@ -160,6 +173,7 @@ get '/mypage/:target_user_id' do
       text-align: center;
     '>ユーザーが存在しません。</p>
     <style> #header_div { margin-top: -70px; } </style>"
+    client.finish
     redirect '/top'
   end
 
@@ -257,6 +271,8 @@ get '/mypage/:target_user_id' do
   # いいね数
   @count_iine = client.exec_params("select count(*) as n from iine where who_id = $1", [@target_user_id]).first['n'].to_i
 
+  client.finish
+
   @title = "#{@target_user_name}さんのページ"
   @flash = session[:flash]
   session[:flash] = nil
@@ -277,6 +293,8 @@ post '/login' do
   @res = client.exec_params('select * from users where user_name=$1 and user_pass=$2', [params[:name], params[:pass]]).first
 
   session[:user_id] = @res['id'].to_i unless @res.nil?
+
+  client.finish
 
   unless session[:user_id].nil?
     session[:flash] = "<p class='animated fadeInDown' id = 'flash_info' style='
@@ -339,6 +357,7 @@ post '/signup' do
       font-size: 1.7em;
       font-weight: solid;
     '>通知： 入力された名前は、既に使用されています。</p>"
+    client.finish
     redirect '/signup'
   else
     session[:user_id] = client.exec_params('insert into users(user_name, user_pass, user_profile) values($1, $2, $3) returning id;', [name, pass, nil]).first['id'].to_i
@@ -356,6 +375,7 @@ post '/signup' do
       font-size: 1.7em;
       font-weight: solid;
     '>成功： 登録が無事処理されました。ようこそ。</p>"
+    client.finish
     redirect '/login'
   end
 end
@@ -383,6 +403,7 @@ post '/add_tweet' do
     session[:flash] = "<p class='animated fadeInDown' id = 'flash_info' style='height: 34px; width: 30%; z-index: 2px; background-color: rgb(37, 165, 221); padding-left: 20px; margin: 6px 35% 10px 35%; border-radius: 5px; color: white; font-size: 1.5em; font-weight: solid;'>完了： 投稿が正常に処理されました。</p>
     <style> #header_div { margin-top: -70px; } </style>"
   end
+  client.finish
   redirect '/top'
 end
 
@@ -397,7 +418,7 @@ post '/foll_system' do
     # 追加処理
     client.exec_params('insert into follows(who_id, send_id) values($1, $2)', [session[:user_id], params[:now_unfollower_id].to_i]) if params[:add_follow] == "フォローする"
   end
-
+  client.finish
   redirect params[:from_url]
 end
 
@@ -409,6 +430,8 @@ post '/iine_system' do
 
   # 解除処理
   client.exec_params('delete from iine where who_id = $1 and twe_id = $2', [session[:user_id], params[:twe_id].to_i]) if params[:iine_off]
+
+  client.finish
 
   # このルーティングを通った場合、animatedのアニメーションをoff
   session[:is_animation] = false
@@ -436,6 +459,8 @@ post '/retw_system' do
     client.exec_params('insert into tweets(creater_id, dateinfo, msg, img_name, re_sou_id) values($1, current_timestamp, NULL, NULL, $2)', [session[:user_id], params[:twe_id].to_i])
   end
 
+  client.finish
+
   # このルーティングを通った場合、animatedのアニメーションをoff
   session[:is_animation] = false
 
@@ -452,7 +477,6 @@ post '/retw_system' do
     # 上が画像でない。なら、2 か 1 つ前の投稿を表示させる。 迷っている。
     redirect "#{params[:from_url]}#res_num_#{params[:res_num].to_i - 2}"
   end
-
 end
 
 post '/edit_img_back' do
@@ -473,5 +497,6 @@ post '/edit_user_profile' do
   login_check()
 
   client.query('update users set user_profile = $1 where id = $2', [params[:new_user_profile], session[:user_id]])
+  client.finish
   redirect '/mypage'
 end

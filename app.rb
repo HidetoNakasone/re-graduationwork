@@ -456,11 +456,22 @@ post '/retw_system' do
 end
 
 post '/edit_img_back' do
+  login_check()
+
   FileUtils.mv(params[:go_img_back][:tempfile], "./public/user_back/#{session[:user_id]}_back.jpg")
   redirect params[:from_url]
 end
 
 post '/edit_img_icon' do
+  login_check()
+
   FileUtils.mv(params[:go_img_icon][:tempfile], "./public/user_icon/#{session[:user_id]}_icon.jpg")
   redirect params[:from_url]
+end
+
+post '/edit_user_profile' do
+  login_check()
+
+  client.query('update users set user_profile = $1 where id = $2', [params[:new_user_profile], session[:user_id]])
+  redirect '/mypage'
 end

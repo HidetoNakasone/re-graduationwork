@@ -117,11 +117,14 @@
       <p id = 'account_comment'><%= @target_user_profile %></p>
 
       <% if @is_same %>
-      <input type="text" id="go_comment">
-      <input type="button" id="profile_ajax" value="プロフィール変更">
-
-      <!-- ↓ js、rb、js 経由で戻ってくる。 -->
-      <div id="result"></div>
+      <div id="profile_edit">
+        <br>
+        <p>プロフィール文章の編集</p>
+        <form action="/edit_user_profile" method="POST">
+          <input type="text" name="new_user_profile" placeholder="新しいプロフィール文章">
+          <button type="submit">Go</button>
+        </form>
+      </div>
       <% end %>
 
       </div>

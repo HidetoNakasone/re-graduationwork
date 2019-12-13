@@ -22,7 +22,7 @@
     <% if @is_same %>
       <form action="/edit_img_back" enctype="multipart/form-data" method="post">
         <input type="hidden" name="from_url" value="<%= request.path %>">
-        <label><input type="file" onchange="this.form.submit()" accept="image/*" name="go_img_back" style="display: none;"><img id="mypage_back_img" src="/user_back/<%= @target_user_id %>_back.jpg" style="cursor: pointer;"></label>
+        <label><input type="file" onchange="this.form.submit()" accept="image/*" name="go_img_back" style="display: none;"><img id="mypage_back_img" src="/user_back/<%= @target_user_id %>_back.jpg?hoge=<%= Time.now() %>" style="cursor: pointer;"></label>
       </form>
     <% else %>
       <img id="mypage_back_img" src="/user_back/<%= @target_user_id %>_back.jpg">
@@ -38,7 +38,7 @@
     <% if @is_same %>
       <form action="/edit_img_icon" enctype="multipart/form-data" method="post">
         <input type="hidden" name="from_url" value="<%= request.path %>">
-        <label><input type="file" onchange="this.form.submit()" accept="image/*" name="go_img_icon" style="display: none;"><div><img src="/user_icon/<%= @target_user_id %>_icon.jpg" style="cursor: pointer;"></div></label>
+        <label><input type="file" onchange="this.form.submit()" accept="image/*" name="go_img_icon" style="display: none;"><div><img src="/user_icon/<%= @target_user_id %>_icon.jpg?hoge=<%= Time.now() %>" style="cursor: pointer;"></div></label>
       </form>
     <% else %>
       <div>

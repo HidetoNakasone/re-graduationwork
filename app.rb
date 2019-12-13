@@ -454,3 +454,13 @@ post '/retw_system' do
   end
 
 end
+
+post '/edit_img_back' do
+  FileUtils.mv(params[:go_img_back][:tempfile], "./public/user_back/#{session[:user_id]}_back.jpg")
+  redirect params[:from_url]
+end
+
+post '/edit_img_icon' do
+  FileUtils.mv(params[:go_img_icon][:tempfile], "./public/user_icon/#{session[:user_id]}_icon.jpg")
+  redirect params[:from_url]
+end

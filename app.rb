@@ -72,7 +72,7 @@ get '/top' do
 
   # ログインユーザーが リツイート しているtwe_idを取得
   my_retw_lists = []
-  client.exec_params('select retw_id from retw where who_id = $1', [@my_user_id]).each { |i| my_retw_lists.push(i['retw_id']) }
+  client.exec_params('select re_sou_id from tweets where creater_id = $1 and re_sou_id is not null', [@my_user_id]).each { |i| my_retw_lists.push(i['re_sou_id']) }
 
   # 取得した投稿の "総リツイート数・総いいね数・ログイン者がいいねしているか、リツイートしているか" を反映させる
   @res.each do |i|
@@ -90,7 +90,7 @@ get '/top' do
       i['is_retw'] = false
     end
     i['n_iines'] = client.exec_params('select count(*) as n from iine where twe_id = $1', [target_id]).first['n'].to_i
-    i['n_retws'] = client.exec_params('select count(*) as n from retw where retw_id = $1', [target_id]).first['n'].to_i
+    i['n_retws'] = client.exec_params('select count(*) as n from tweets where re_sou_id = $1', [target_id]).first['n'].to_i
   end
 
   # フォロワー情報： 5人
@@ -207,7 +207,7 @@ get '/mypage/:target_user_id' do
 
   # ログインユーザーが リツイート しているtwe_idを取得
   my_retw_lists = []
-  client.exec_params('select retw_id from retw where who_id = $1', [@my_user_id]).each { |i| my_retw_lists.push(i['retw_id']) }
+  client.exec_params('select re_sou_id from tweets where creater_id = $1 and re_sou_id is not null', [@my_user_id]).each { |i| my_retw_lists.push(i['re_sou_id']) }
 
   # 取得した投稿の "総リツイート数・総いいね数・ログインユーザーがいいねしているか、リツイートしているか" を反映させる
   @res.each do |i|
@@ -225,7 +225,7 @@ get '/mypage/:target_user_id' do
       i['is_retw'] = false
     end
     i['n_iines'] = client.exec_params('select count(*) as n from iine where twe_id = $1', [target_id]).first['n'].to_i
-    i['n_retws'] = client.exec_params('select count(*) as n from retw where retw_id = $1', [target_id]).first['n'].to_i
+    i['n_retws'] = client.exec_params('select count(*) as n from tweets where re_sou_id = $1', [target_id]).first['n'].to_i
   end
 
   # そのターゲットユーザーのフォロワー情報
@@ -426,4 +426,31 @@ post '/iine_system' do
     # 上が画像でない。なら、2 か 1 つ前の投稿を表示させる。 迷っている。
     redirect "#{params[:from_url]}#res_num_#{params[:res_num].to_i - 2}"
   end
+end
+
+post '/retw_system' do
+  login_check()
+
+  # 登録処理
+  if params[:retw_on]
+    client.exec_params('insert into tweets(creater_id, dateinfo, msg, img_name, re_sou_id) values($1, current_timestamp, NULL, NULL, $2)', [session[:user_id], params[:twe_id].to_i])
+  end
+
+  # このルーティングを通った場合、animatedのアニメーションをoff
+  session[:is_animation] = false
+
+  # === redirect で元の投稿の表示部分へ戻そうとしている。 ===
+  # 上の投稿が画像なら、それを表示させる。
+  if params[:pre_img_is] == "true"
+    # ただ、自分が画像持っているなら、自分を表示。
+    if params[:my_img_is] == "true"
+      redirect "#{params[:from_url]}#res_num_#{params[:res_num].to_i - 0}"
+    else
+      redirect "#{params[:from_url]}#res_num_#{params[:res_num].to_i - 1}"
+    end
+  else
+    # 上が画像でない。なら、2 か 1 つ前の投稿を表示させる。 迷っている。
+    redirect "#{params[:from_url]}#res_num_#{params[:res_num].to_i - 2}"
+  end
+
 end

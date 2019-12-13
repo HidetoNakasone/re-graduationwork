@@ -25,11 +25,11 @@
       <% end %>
 
       <div id="about_me_back">
-        <img src="/user_back/<%= @my_user_id %>_back.jpg">
+        <img src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_back/<%= @my_user_id %>_back.jpg">
       </div>
       <div class="waku">
         <a href="/mypage/<%= @my_user_id %>">
-          <img id="about_me_icon" src="/user_icon/<%= @my_user_id %>_icon.jpg">
+          <img id="about_me_icon" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= @my_user_id %>_icon.jpg">
         </a>
         <h1><%= @my_user_name %></h1>
         <p>&nbsp;</p>
@@ -59,7 +59,7 @@
           <h1>フォロワー</h1>
           <% @res_follower.each do |follower| %>
           <div class="hito">
-            <a href="/mypage/<%= follower['id'] %>"><img src="/user_icon/<%= follower['id'] %>_icon.jpg"></a>
+            <a href="/mypage/<%= follower['id'] %>"><img src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= follower['id'] %>_icon.jpg"></a>
             <a href="/mypage/<%= follower['id'] %>">
               <p class="name"><%= follower['user_name'] %></p>
             </a>
@@ -99,7 +99,7 @@
 
           <!-- 投稿用のフォーム -->
           <div id="what_now">
-            <img id="form_my_icon" src="/user_icon/<%= @my_user_id %>_icon.jpg">
+            <img id="form_my_icon" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= @my_user_id %>_icon.jpg">
             <form id="now_form" enctype="multipart/form-data" action="/add_tweet" method="post">
               <textarea name="go_msg" placeholder="いまどうしてる？"></textarea>
               <br>
@@ -130,7 +130,7 @@
 
                     <!-- 投稿者の情報/各Mypageへのリンク -->
                     <a href="/mypage/<%= row['creater_id'] %>">
-                      <img class="icon_img" src="/user_icon/<%= row['creater_id'] %>_icon.jpg">
+                      <img class="icon_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= row['creater_id'] %>_icon.jpg">
                     </a>
                     <a href="/mypage/<%= row['creater_id'] %>">
                       <p class="name"><%= row['user_name'] %></p>
@@ -143,7 +143,7 @@
                       <p><%= row['msg'] %></p>
 
                       <% unless row['img_name'].nil? %>
-                        <img class="up_img" src="/up_imgs/<%= row['img_name'] %>.jpg">
+                        <img class="up_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/up_imgs/<%= row['img_name'] %>.jpg">
                       <% end %>
 
                       <%
@@ -255,7 +255,7 @@
 
                   <div class="retw_top">
                     <a href="/mypage/<%= row['creater_id'] %>">
-                      <img class="retw_icon_img" src="/user_icon/<%= row['creater_id'] %>_icon.jpg">
+                      <img class="retw_icon_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= row['creater_id'] %>_icon.jpg">
                     </a>
                     <a href="/mypage/<%= row['creater_id'] %>">
                       <p class="retw_name">
@@ -269,7 +269,7 @@
                   <div style = "margin-left: 0px;">
 
                     <a href="/mypage/<%= row['re_sou_tweet']['creater_id'] %>">
-                      <img class="icon_img" src="/user_icon/<%= row['re_sou_tweet']['creater_id'] %>_icon.jpg">
+                      <img class="icon_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= row['re_sou_tweet']['creater_id'] %>_icon.jpg">
                     </a>
                     <a href="/mypage/<%= row['re_sou_tweet']['creater_id'] %>">
                       <p class="name"><%= row['re_sou_tweet']['user_name'] %></p>
@@ -283,7 +283,7 @@
 
                       <% if row['re_sou_tweet']['img_name'].nil?
                       else %>
-                        <img class="up_img" src="/up_imgs/<%= row['re_sou_tweet']['img_name'] %>.jpg">
+                        <img class="up_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/up_imgs/<%= row['re_sou_tweet']['img_name'] %>.jpg">
                       <% end %>
 
                       <div class = "res_info">
@@ -377,7 +377,7 @@
               <h1>フォロー</h1>
               <% @res_follow.each do |follow| %>
               <div class="hito">
-                <a href="/mypage/<%= follow['id'] %>"><img src="/user_icon/<%= follow['id'] %>_icon.jpg"></a>
+                <a href="/mypage/<%= follow['id'] %>"><img src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= follow['id'] %>_icon.jpg"></a>
                 <a href="/mypage/<%= follow['id'] %>">
                   <p class="name"><%= follow['user_name'] %></p>
                 </a>

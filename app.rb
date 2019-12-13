@@ -22,6 +22,15 @@ def client
   )
 end
 
+# AWS S3 への接続クライアント
+def s3
+  @s3 ||= Aws::S3::Client.new(
+    :region => 'us-east-2',
+    :access_key_id => ENV['AWS_S3_ACCESS_KEY_ID'],
+    :secret_access_key => ENV['AWS_S3_SECRET_ACCESS_KEY']
+  )
+end
+
 def login_check
   redirect '/login' if session[:user_id].nil?
 end
@@ -362,8 +371,40 @@ post '/signup' do
   else
     session[:user_id] = client.exec_params('insert into users(user_name, user_pass, user_profile) values($1, $2, $3) returning id;', [name, pass, nil]).first['id'].to_i
 
-    FileUtils.mv(params[:icon_img][:tempfile], "./public/user_icon/#{session[:user_id]}_icon.jpg")
-    FileUtils.mv(params[:back_img][:tempfile], "./public/user_back/#{session[:user_id]}_back.jpg")
+    # FileUtils.mv(params[:back_img][:tempfile], "./public/user_icon/#{session[:user_id]}_icon.jpg")
+    # FileUtils.mv(params[:back_img][:tempfile], "./public/user_back/#{session[:user_id]}_back.jpg")
+
+    object_key = "user_icon/#{session[:user_id]}_icon.jpg"
+    # 保存処理
+    s3.put_object(
+      bucket: ENV['AWS_S3_BUCKET'],
+      key: object_key,
+      body: params[:icon_img][:tempfile],
+      content_type: "image/jpegput",
+      metadata: {}
+    )
+    # アクセスを公開に設定する
+    s3.put_object_acl({
+      acl: "public-read",
+      bucket: ENV['AWS_S3_BUCKET'],
+      key: object_key,
+    })
+
+    object_key = "user_back/#{session[:user_id]}_back.jpg"
+    # 保存処理
+    s3.put_object(
+      bucket: ENV['AWS_S3_BUCKET'],
+      key: object_key,
+      body: params[:back_img][:tempfile],
+      content_type: "image/jpegput",
+      metadata: {}
+    )
+    # アクセスを公開に設定する
+    s3.put_object_acl({
+      acl: "public-read",
+      bucket: ENV['AWS_S3_BUCKET'],
+      key: object_key,
+    })
 
     session[:flash] = "<p class='animated fadeInDown' id = 'flash_info' style='
       height: 40px;
@@ -387,7 +428,22 @@ post '/add_tweet' do
   else
     if params[:go_file]
       file_name = ((0..9).to_a + ("a".."z").to_a + ("A".."Z").to_a).sample(30).join
-      FileUtils.mv(params[:go_file][:tempfile], "./public/up_imgs/#{file_name}.jpg")
+      # FileUtils.mv(params[:go_file][:tempfile], "./public/up_imgs/#{file_name}.jpg")
+      object_key = "up_imgs/#{file_name}.jpg"
+      # 保存処理
+      s3.put_object(
+        bucket: ENV['AWS_S3_BUCKET'],
+        key: object_key,
+        body: params[:go_file][:tempfile],
+        content_type: "image/jpegput",
+        metadata: {}
+      )
+      # アクセスを公開に設定する
+      s3.put_object_acl({
+        acl: "public-read",
+        bucket: ENV['AWS_S3_BUCKET'],
+        key: object_key,
+      })
     else
       file_name = nil
     end
@@ -482,14 +538,44 @@ end
 post '/edit_img_back' do
   login_check()
 
-  FileUtils.mv(params[:go_img_back][:tempfile], "./public/user_back/#{session[:user_id]}_back.jpg")
+  # FileUtils.mv(params[:go_img_back][:tempfile], "./public/user_back/#{session[:user_id]}_back.jpg")
+  object_key = "user_back/#{session[:user_id]}_back.jpg"
+  # 保存処理
+  s3.put_object(
+    bucket: ENV['AWS_S3_BUCKET'],
+    key: object_key,
+    body: params[:go_img_back][:tempfile],
+    content_type: "image/jpegput",
+    metadata: {}
+  )
+  # アクセスを公開に設定する
+  s3.put_object_acl({
+    acl: "public-read",
+    bucket: ENV['AWS_S3_BUCKET'],
+    key: object_key,
+  })
   redirect params[:from_url]
 end
 
 post '/edit_img_icon' do
   login_check()
 
-  FileUtils.mv(params[:go_img_icon][:tempfile], "./public/user_icon/#{session[:user_id]}_icon.jpg")
+  # FileUtils.mv(params[:go_img_icon][:tempfile], "./public/user_icon/#{session[:user_id]}_icon.jpg")
+  object_key = "user_icon/#{session[:user_id]}_icon.jpg"
+  # 保存処理
+  s3.put_object(
+    bucket: ENV['AWS_S3_BUCKET'],
+    key: object_key,
+    body: params[:go_img_icon][:tempfile],
+    content_type: "image/jpegput",
+    metadata: {}
+  )
+  # アクセスを公開に設定する
+  s3.put_object_acl({
+    acl: "public-read",
+    bucket: ENV['AWS_S3_BUCKET'],
+    key: object_key,
+  })
   redirect params[:from_url]
 end
 

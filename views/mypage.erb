@@ -22,10 +22,10 @@
     <% if @is_same %>
       <form action="/edit_img_back" enctype="multipart/form-data" method="post">
         <input type="hidden" name="from_url" value="<%= request.path %>">
-        <label><input type="file" onchange="this.form.submit()" accept="image/*" name="go_img_back" style="display: none;"><img id="mypage_back_img" src="/user_back/<%= @target_user_id %>_back.jpg?hoge=<%= Time.now() %>" style="cursor: pointer;"></label>
+        <label><input type="file" onchange="this.form.submit()" accept="image/*" name="go_img_back" style="display: none;"><img id="mypage_back_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_back/<%= @target_user_id %>_back.jpg?hoge=<%= Time.now() %>" style="cursor: pointer;"></label>
       </form>
     <% else %>
-      <img id="mypage_back_img" src="/user_back/<%= @target_user_id %>_back.jpg">
+      <img id="mypage_back_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_back/<%= @target_user_id %>_back.jpg">
     <% end %>
 
   </div>
@@ -38,11 +38,11 @@
     <% if @is_same %>
       <form action="/edit_img_icon" enctype="multipart/form-data" method="post">
         <input type="hidden" name="from_url" value="<%= request.path %>">
-        <label><input type="file" onchange="this.form.submit()" accept="image/*" name="go_img_icon" style="display: none;"><div><img src="/user_icon/<%= @target_user_id %>_icon.jpg?hoge=<%= Time.now() %>" style="cursor: pointer;"></div></label>
+        <label><input type="file" onchange="this.form.submit()" accept="image/*" name="go_img_icon" style="display: none;"><div><img src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= @target_user_id %>_icon.jpg?hoge=<%= Time.now() %>" style="cursor: pointer;"></div></label>
       </form>
     <% else %>
       <div>
-        <img src="/user_icon/<%= @target_user_id %>_icon.jpg">
+        <img src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= @target_user_id %>_icon.jpg">
       </div>
     <% end %>
   </div>
@@ -141,7 +141,7 @@
         <% @res_follower.each do |follower| %>
           <% if follower['id'].to_i != @my_user_id %>
             <div class = "hito">
-              <a href="/mypage/<%= follower['id'] %>"><img src="/user_icon/<%= follower['id'] %>_icon.jpg"></a>
+              <a href="/mypage/<%= follower['id'] %>"><img src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= follower['id'] %>_icon.jpg"></a>
               <a href="/mypage/<%= follower['id'] %>"><p class="name"><%= follower['user_name'] %></p></a>
               <% unless follower['is_follow'] %>
                 <form action="/foll_system" method="post">
@@ -198,7 +198,7 @@
 
                   <!-- 投稿者の情報/各Mypageへのリンク -->
                   <a href="/mypage/<%= row['creater_id'] %>">
-                    <img class="icon_img" src="/user_icon/<%= row['creater_id'] %>_icon.jpg">
+                    <img class="icon_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= row['creater_id'] %>_icon.jpg">
                   </a>
                   <a href="/mypage/<%= row['creater_id'] %>">
                     <p class="name"><%= row['user_name'] %></p>
@@ -211,7 +211,7 @@
                     <p><%= row['msg'] %></p>
 
                     <% unless row['img_name'].nil? %>
-                      <img class="up_img" src="/up_imgs/<%= row['img_name'] %>.jpg">
+                      <img class="up_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/up_imgs/<%= row['img_name'] %>.jpg">
                     <% end %>
 
                     <%
@@ -323,7 +323,7 @@
 
                 <div class="retw_top">
                   <a href="/mypage/<%= row['creater_id'] %>">
-                    <img class="retw_icon_img" src="/user_icon/<%= row['creater_id'] %>_icon.jpg">
+                    <img class="retw_icon_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= row['creater_id'] %>_icon.jpg">
                   </a>
                   <a href="/mypage/<%= row['creater_id'] %>">
                     <p class="retw_name">
@@ -337,7 +337,7 @@
                 <div style = "margin-left: 0px;">
 
                   <a href="/mypage/<%= row['re_sou_tweet']['creater_id'] %>">
-                    <img class="icon_img" src="/user_icon/<%= row['re_sou_tweet']['creater_id'] %>_icon.jpg">
+                    <img class="icon_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= row['re_sou_tweet']['creater_id'] %>_icon.jpg">
                   </a>
                   <a href="/mypage/<%= row['re_sou_tweet']['creater_id'] %>">
                     <p class="name"><%= row['re_sou_tweet']['user_name'] %></p>
@@ -351,7 +351,7 @@
 
                     <% if row['re_sou_tweet']['img_name'].nil?
                     else %>
-                      <img class="up_img" src="/up_imgs/<%= row['re_sou_tweet']['img_name'] %>.jpg">
+                      <img class="up_img" src="https://re-graduationwork.s3.us-east-2.amazonaws.com/up_imgs/<%= row['re_sou_tweet']['img_name'] %>.jpg">
                     <% end %>
 
                     <div class = "res_info">
@@ -446,7 +446,7 @@
           <% @res_follow.each do |follow| %>
             <% if follow['id'].to_i != @my_user_id %>
               <div class = "hito">
-                <a href="/mypage/<%= follow['id'] %>"><img src="/user_icon/<%= follow['id'] %>_icon.jpg"></a>
+                <a href="/mypage/<%= follow['id'] %>"><img src="https://re-graduationwork.s3.us-east-2.amazonaws.com/user_icon/<%= follow['id'] %>_icon.jpg"></a>
                 <a href="/mypage/<%= follow['id'] %>"><p class="name"><%= follow['user_name'] %></p></a>
 
                 <form action="/foll_system" method="post">

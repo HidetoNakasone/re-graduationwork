@@ -889,7 +889,7 @@ GEM
       aws-eventstream (~> 1.0, >= 1.0.2)
     backports (3.15.0)
     dotenv (2.7.5)
-    jmespath (1.4.0)
+    jmespath (1.6.1)
     multi_json (1.14.1)
     mustermann (1.0.3)
     pg (1.1.4)
